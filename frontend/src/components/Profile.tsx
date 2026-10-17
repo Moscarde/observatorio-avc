@@ -14,7 +14,7 @@ function bars(
       left: horizontal ? 160 : 44,
       right: 40,
       top: 16,
-      bottom: horizontal ? 15 : 38,
+      bottom: 38,
     },
     tooltip: { trigger: "axis", renderMode: "richText" },
     xAxis: horizontal
