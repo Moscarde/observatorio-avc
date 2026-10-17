@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const echarts=require('../vendor/echarts/echarts.cjs');
+const data=path.join(__dirname,'../public/data');
+const manifest=JSON.parse(fs.readFileSync(path.join(data,'manifest.json')));
+const geo=JSON.parse(fs.readFileSync(path.join(data,manifest.geography)));
+assert.equal(geo.features.length,92);
+echarts.registerMap('RJ',geo);
+const chart=echarts.init(null,null,{renderer:'svg',ssr:true,width:700,height:400});
+chart.setOption({animation:false,series:[{type:'map',map:'RJ',data:geo.features.map(f=>({name:f.properties.name,value:null}))}]});
+const svg=chart.renderToSVGString();
+assert.ok(svg.includes('<svg'));
+assert.ok((svg.match(/<path/g)||[]).length>=92,'Every municipality is rendered as an SVG path');
+chart.dispose();
+console.log('Map SSR: 92 municipalities rendered successfully.');

@@ -1,0 +1,4 @@
+pysus==2.11.7
+pandas==2.3.3
+pyarrow>=20,<24
+ruff>=0.12,<1
