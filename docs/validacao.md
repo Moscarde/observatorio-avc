@@ -1,6 +1,6 @@
 # Evidências de validação local
 
-Verificações executadas em **17/10/2026**, em Linux, com Python 3.12.3 e Node.js 22.23.3. Esta página registra uma execução local; o workflow ainda não foi executado no GitHub. Os testes e comandos podem ser repetidos conforme [operação](operacao.md).
+Verificações executadas em **17/10/2026**, em Linux, com Python 3.12.3 e Node.js 22.23.3. Esta página registra as verificações locais; as execuções remotas estão disponíveis no [GitHub Actions](https://github.com/Moscarde/observatorio-avc/actions/workflows/ci.yml). Os testes e comandos podem ser repetidos conforme [operação](operacao.md).
 
 | Verificação | Resultado |
 |---|---|
@@ -15,6 +15,10 @@ Verificações executadas em **17/10/2026**, em Linux, com Python 3.12.3 e Node.
 | Instalação limpa `npm ci`, lint/tipagem e build | Aprovados |
 | Testes de navegador no build de produção, desktop e celular | 8 testes aprovados |
 | `npm audit` na instalação limpa | Nenhuma vulnerabilidade reportada naquela execução; não equivale a uma auditoria de segurança do projeto |
+
+## Validação no GitHub
+
+A [primeira execução remota](https://github.com/Moscarde/observatorio-avc/actions/runs/39056574339), em 17/10/2026, foi aprovada. Ela executou lint/formatação e testes Python, validação dos agregados, geração do relatório, instalação e checks do frontend e testes de navegador em desktop e celular. Os artefatos de evidência foram publicados pela execução.
 
 ## Base de dados examinada
 
@@ -55,4 +59,4 @@ Capturas feitas com os agregados existentes, sem fixtures sintéticas. Os arquiv
 
 A instalação de dependências e do navegador usa rede, mas não baixa dados de internações. Testes de PySUS usam mocks ou fixtures e não comprovam a disponibilidade atual do FTP. O modo offline não foi executado sobre os 72 arquivos brutos históricos, ausentes localmente.
 
-O código do CI está versionado, mas sua aprovação remota depende do repositório GitHub. Não houve publicação remota ou alteração do deploy online. Durações e hashes específicos de cada execução analítica ficam em seu `run.json`; não são tratados como benchmark de desempenho.
+O repositório e o workflow estão publicados no GitHub. Consulte as [execuções remotas](https://github.com/Moscarde/observatorio-avc/actions/workflows/ci.yml) para os resultados de cada commit. A publicação do código não altera o deploy online. Durações e hashes específicos de cada execução analítica ficam em seu `run.json`; não são tratados como benchmark de desempenho.

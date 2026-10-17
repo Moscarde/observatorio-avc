@@ -1,5 +1,7 @@
 # Observatório de AVC
 
+[![Qualidade e reprodução](https://github.com/Moscarde/observatorio-avc/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Moscarde/observatorio-avc/actions/workflows/ci.yml)
+
 Pipeline de dados públicos com Python e SQL, painel interativo e relatório reproduzível sobre internações por AVC no Rio de Janeiro.
 
 **Versão online:** [avc.riocode.com.br](https://avc.riocode.com.br/).
@@ -65,7 +67,7 @@ npm run build
 
 `npm test` precisa do ambiente Python acima e reconcilia SQL e TypeScript em três recortes reais. Os dois testes específicos de PySUS são ignorados se o extra não estiver instalado; para executá-los, use `requirements-extract.txt` em vez de `requirements-dev.txt`.
 
-Testes de navegador: `npx playwright install chromium` e `npm run test:e2e`. O workflow em `.github/workflows/ci.yml` repete os checks sem coletar dados. Confira as [evidências locais e limites](docs/validacao.md); não há execução remota de CI declarada.
+Testes de navegador: `npx playwright install chromium` e `npm run test:e2e`. O workflow em `.github/workflows/ci.yml` repete os checks sem coletar dados. Confira as [execuções do CI](https://github.com/Moscarde/observatorio-avc/actions/workflows/ci.yml) e as [evidências e limites](docs/validacao.md).
 
 ## Documentação
 

@@ -79,7 +79,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-`npm test` também executa o pipeline Python para reconciliar os cálculos SQL/TypeScript. `PYTHON` permite selecionar o executável. O CI executa os mesmos checks com os extras de extração; não agenda coleta nem faz deploy. Sua execução remota depende da publicação do repositório.
+`npm test` também executa o pipeline Python para reconciliar os cálculos SQL/TypeScript. `PYTHON` permite selecionar o executável. O CI executa os mesmos checks com os extras de extração; não agenda coleta nem faz deploy. As execuções remotas estão disponíveis no [GitHub Actions](https://github.com/Moscarde/observatorio-avc/actions/workflows/ci.yml).
 
 `just` é opcional: `just validate`, `just report`, `just check`, `just build`, `just dev` e `just etl-offline` encapsulam os comandos locais.
 

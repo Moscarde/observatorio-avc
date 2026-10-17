@@ -11,4 +11,4 @@
 - Atualiza dependências do frontend e usa tipos oficiais e módulos necessários do ECharts.
 - Documenta arquitetura, modelo, operação, limitações, contribuição e licenciamento MIT.
 
-Os brutos da extração histórica não estão disponíveis nesta cópia. Esta versão reaproveita os agregados de 2020–2025; não houve nova coleta nem revalidação dos brutos. O workflow de CI ainda depende de execução no repositório remoto.
+Os brutos da extração histórica não estão disponíveis nesta cópia. Esta versão reaproveita os agregados de 2020–2025; não houve nova coleta nem revalidação dos brutos. O workflow de CI está disponível no [GitHub Actions](https://github.com/Moscarde/observatorio-avc/actions/workflows/ci.yml).

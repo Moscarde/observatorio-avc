@@ -12,11 +12,11 @@ Commits incrementais no padrão Conventional Commits + gitmoji, com descrição 
 |---|---|---|
 | M0 | Base independente, instruções e histórico pessoal | Concluído |
 | M1 | Contrato v1, validador offline, qualidade JSON/Markdown e regressões | Implementado e testado |
-| M2 | Três ambientes Python com hashes, comandos locais e workflow de CI | Instalação local validada; workflow remoto ainda não executado |
+| M2 | Três ambientes Python com hashes, comandos locais e workflow de CI | Instalação e validações local e remota aprovadas |
 | M3 | Parquet, DuckDB e seis marts SQL com reconciliação | Implementado e testado |
 | M4 | Relatório HTML portátil, filtros, tabelas e gráfico | Gerado e verificado em desktop e celular |
 | M5 | ETL offline, rastreio de execução e restauração por hashes | Implementado e testado; extração histórica real depende de cache ausente |
-| M6 | MIT, créditos, contribuição, screenshots e documentação de release | Preparado localmente; publicação remota ainda não realizada |
+| M6 | MIT, créditos, contribuição, screenshots e documentação de release | Publicado; release 0.1.0 ainda não criada |
 
 ## O que é demonstrável agora
 
@@ -36,11 +36,13 @@ A referência disponível contém cubos anuais, manifest, geografia e referênci
 
 Quando arquivos já coletados forem disponibilizados localmente, será possível demonstrar o reprocessamento histórico com `--offline`, reconciliar seus resultados e registrar essa evidência. Não fazer downloads para contornar a ausência.
 
-## Próximos passos externos
+## Publicação
 
-1. Criar o repositório pessoal `moscarde/observatorio-avc` e enviar o histórico local.
-2. Executar o workflow no GitHub e acompanhar o resultado antes de exibir badge de aprovação.
-3. Publicar a release 0.1.0 com as evidências e limitações documentadas.
-4. Decidir se o projeto pessoal terá uma hospedagem própria; o painel online está disponível em <https://avc.riocode.com.br/>.
+O histórico está publicado em [Moscarde/observatorio-avc](https://github.com/Moscarde/observatorio-avc), com licença MIT, descrição, site e tópicos configurados. O [workflow de validação](https://github.com/Moscarde/observatorio-avc/actions/workflows/ci.yml) roda a cada push e pull request.
+
+## Próximos passos
+
+1. Publicar a release 0.1.0 com as evidências e limitações documentadas.
+2. Decidir se o projeto terá uma hospedagem própria; o painel online está disponível em <https://avc.riocode.com.br/>.
 
 Essas etapas não são requisitos para executar o projeto localmente. Nenhum serviço pago foi contratado ou configurado.
