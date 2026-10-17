@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "dimensions": ["period", "residence", "hospital_city", "hospital", "sex", "age", "cid"],
+  "measures": ["n", "deaths", "death_n", "days", "days_n", "cents", "value_n", "age_sum", "age_n"],
+  "integers": ["n", "deaths", "death_n", "days_n", "cents", "value_n", "age_n"],
+  "sex": ["Masculino", "Feminino", "Ignorado"],
+  "age": ["0–19", "20–39", "40–49", "50–59", "60–69", "70–79", "80+", "Ignorada"],
+  "cid_pattern": "I6[0-4]\\d?",
+  "state": "RJ",
+  "municipalities": 92,
+  "age_sum_absolute_tolerance": 0.00001,
+  "grain": "competência × residência × município de internação × CNES × sexo × faixa etária × CID",
+  "population": "AIHs normais (IDENT=1), I60–I64, arquivos RJ; não são pacientes únicos"
+}
