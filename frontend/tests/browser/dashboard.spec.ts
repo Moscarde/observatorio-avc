@@ -80,10 +80,14 @@ test("Shared filters update indicators, charts and hospitals without overflow", 
   await page.goto("/");
   await expect(page.locator(".kpi").first()).toContainText("14");
   await expect(page.locator(".map-chart svg")).toBeVisible();
-  await page.getByLabel("Sexo", { exact: true }).selectOption("Feminino");
+  await page
+    .getByRole("combobox", { name: "Sexo", exact: true })
+    .selectOption("Feminino");
   await expect(page.locator(".kpi").first()).toContainText("10");
   await expect(page.locator("tbody tr")).toHaveCount(1);
-  await page.getByLabel("Município", { exact: true }).selectOption("330170");
+  await page
+    .getByRole("combobox", { name: "Município", exact: true })
+    .selectOption("330170");
   await expect(page.locator(".kpi").first()).toContainText("0");
   await expect(
     page.getByText("Nenhuma internação disponível para este recorte.").first(),
