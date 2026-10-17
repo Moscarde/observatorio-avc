@@ -5,7 +5,6 @@ from datetime import datetime, timezone
 from importlib.metadata import version
 import math
 from pathlib import Path
-import subprocess
 import tempfile
 import time
 import uuid
@@ -13,6 +12,7 @@ import uuid
 import duckdb
 import pandas as pd
 
+from etl.metadata import git_metadata
 from etl.validate import (
     CONTRACT,
     DIMS,
@@ -117,16 +117,6 @@ def reconcile(connection, source_rows):
     }
 
 
-def git_metadata():
-    def read(*args):
-        result = subprocess.run(
-            ["git", "-C", str(ROOT), *args], capture_output=True, text=True, check=False
-        )
-        return result.stdout.strip() if result.returncode == 0 else None
-
-    return {"commit": read("rev-parse", "HEAD"), "dirty": bool(read("status", "--porcelain"))}
-
-
 def build(data, output, filters=None):
     from etl.report import render_report
 
@@ -201,6 +191,7 @@ def build(data, output, filters=None):
                     *sorted((ROOT / "sql").glob("*.sql")),
                     ROOT / "contracts/cube-v1.json",
                     ROOT / "etl/analytics.py",
+                    ROOT / "etl/metadata.py",
                     ROOT / "etl/report.py",
                     ROOT / "etl/validate.py",
                     ROOT / "templates/report.html",
@@ -253,6 +244,37 @@ def build(data, output, filters=None):
         raise
 
 
+def restore(output, run_id):
+    """Restaura uma publicação local somente após conferir todos os hashes da execução."""
+    import re
+
+    require(re.fullmatch(r"[0-9]{8}T[0-9]{6}Z-[a-f0-9]{8}", run_id), "ID de execução inválido")
+    output = Path(output).resolve()
+    directory = output / "runs" / run_id
+    from etl.validate import read_json
+
+    run = read_json(directory / "run.json")
+    require(run.get("id") == run_id and run.get("status") == "complete", "Execução incompleta")
+    hashes = run.get("output_sha256", {})
+    require("report.html" in hashes, "Relatório sem hash registrado")
+    for name, expected in hashes.items():
+        path = directory / name
+        require(
+            Path(name).name == name and path.is_file() and path.resolve().parent == directory,
+            "Artefato ausente ou caminho inválido na restauração",
+        )
+        require(digest(path) == expected, f"Hash divergente na restauração: {name}")
+    with tempfile.NamedTemporaryFile(dir=output, delete=False) as f:
+        temporary = Path(f.name)
+        f.write((directory / "report.html").read_bytes())
+    temporary.replace(output / "index.html")
+    atomic_json(
+        output / "latest.json",
+        {"run": f"runs/{run_id}", "id": run_id, "report": f"runs/{run_id}/report.html"},
+    )
+    return directory
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=ROOT / "frontend/public/data")
@@ -265,8 +287,13 @@ def main(argv=None):
     parser.add_argument("--hospital")
     parser.add_argument("--start-period")
     parser.add_argument("--end-period")
+    parser.add_argument("--restore", metavar="RUN_ID", help="Restaura uma execução local validada")
     args = parser.parse_args(argv)
-    filters = {k: v for k, v in vars(args).items() if k not in ("data", "output") and v is not None}
+    filters = {
+        k: v
+        for k, v in vars(args).items()
+        if k not in ("data", "output", "restore") and v is not None
+    }
     import re
 
     for key in ("start_period", "end_period"):
@@ -275,7 +302,13 @@ def main(argv=None):
     if args.start_period and args.end_period and args.start_period > args.end_period:
         parser.error("Competência inicial posterior à final")
     try:
-        destination = build(args.data, args.output, filters)
+        if args.restore and filters:
+            parser.error("Não combine restauração com filtros")
+        destination = (
+            restore(args.output, args.restore)
+            if args.restore
+            else build(args.data, args.output, filters)
+        )
     except (ValueError, OSError, duckdb.Error) as exc:
         print(f"Pipeline interrompido; publicação anterior preservada: {exc}")
         return 1

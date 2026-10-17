@@ -78,6 +78,10 @@ class OfflineTests(unittest.TestCase):
         self.assertEqual(result, 1)
         self.assertEqual(manifest.read_text(), '{"previous": true}')
         self.assertEqual(len(list(output.iterdir())), 1)
+        run = json.loads(next((self.cache / "runs").glob("*.json")).read_text())
+        self.assertEqual(run["status"], "incomplete")
+        self.assertTrue(run["offline"])
+        self.assertIn("duration_seconds", run)
 
     def test_hospital_reference_does_not_download_by_default(self):
         with patch("etl.extract.subprocess.run", side_effect=AssertionError("download proibido")):

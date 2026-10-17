@@ -1,6 +1,9 @@
 """python etl/main.py --start-year 2020 --end-year 2025"""
 
 import argparse
+from datetime import datetime, timezone
+import time
+import uuid
 import json
 import logging
 from pathlib import Path
@@ -12,6 +15,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import pandas as pd
 
 from etl.extract import extract, geography, hospital_reference
+from etl.metadata import git_metadata
+from etl.validate import atomic_json
 from etl.export import export
 from etl.transform import DIMS, MEASURES, transform
 
@@ -59,7 +64,33 @@ def main(argv=None):
     ):
         parser.error("Use anos de 2020 a 2025 e meses de 1 a 12")
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex[:8]
+    run = {
+        "id": run_id,
+        "git": git_metadata(),
+        "offline": args.offline,
+        "source": args.source,
+        "status": "failed",
+        "coverage": [],
+        "failures": [],
+        "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+    }
+    started = time.monotonic()
+    try:
+        code = execute(args, run)
+        run["status"] = "complete" if code == 0 else "incomplete"
+        return code
+    except Exception as exc:
+        run["error"] = str(exc)
+        raise
+    finally:
+        run["duration_seconds"] = round(time.monotonic() - started, 3)
+        atomic_json(args.cache / "runs" / f"{run_id}.json", run)
+
+
+def execute(args, run):
     coverage, failures, provenance, audits, cubes = [], [], [], {}, {}
+    run.update(coverage=coverage, failures=failures, provenance=provenance, quality=audits)
     for year in range(args.start_year, args.end_year + 1):
         parts = []
         for month in sorted(set(args.months)):

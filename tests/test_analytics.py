@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 import duckdb
 
-from etl.analytics import build, records
+from etl.analytics import build, records, restore
 from etl.validate import ROOT
 
 
@@ -98,3 +98,15 @@ class AnalyticsTests(unittest.TestCase):
         self.assertIn("Manifest SHA-256", html)
         with self.assertRaisesRegex(ValueError, "separada"):
             build(self.data, self.data)
+
+    def test_restore_checks_hashes_before_changing_publication(self):
+        run = json.loads((self.baseline_run / "run.json").read_text())
+        restored = restore(self.output, run["id"])
+        self.assertEqual(restored, self.baseline_run)
+        self.assertEqual(
+            (self.output / "index.html").read_bytes(), (restored / "report.html").read_bytes()
+        )
+        before = (self.output / "latest.json").read_bytes()
+        with self.assertRaisesRegex(ValueError, "ID"):
+            restore(self.output, "../../invalid")
+        self.assertEqual(before, (self.output / "latest.json").read_bytes())
