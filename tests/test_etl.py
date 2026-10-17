@@ -1,5 +1,6 @@
 """Registros sintéticos somente em testes; nunca exportados ao dashboard."""
 
+from importlib.util import find_spec
 from pathlib import Path
 import tempfile
 import unittest
@@ -129,6 +130,7 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(a["status"], "partial")
             self.assertNotIn("N_AIH", payload.decode())
 
+    @unittest.skipUnless(find_spec("pysus"), "Instale requirements-extract.txt para testar PySUS")
     def test_cache_avoids_network_and_preserves_checksum(self):
         with tempfile.TemporaryDirectory() as folder:
             cache = Path(folder)
@@ -147,6 +149,7 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(all(code.startswith("33") and len(code) == 6 for code in names))
         self.assertEqual(names["330455"], "Rio de Janeiro")
 
+    @unittest.skipUnless(find_spec("pysus"), "Instale requirements-extract.txt para testar PySUS")
     def test_origin_curl_preserves_official_raw_provenance(self):
         with tempfile.TemporaryDirectory() as folder:
             cache = Path(folder)

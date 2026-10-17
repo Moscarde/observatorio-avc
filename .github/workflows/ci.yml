@@ -1,0 +1,62 @@
+name: Qualidade e reprodução
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-extract.txt
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Instala dependências Python com hashes
+        run: python -m pip install --require-hashes -r requirements-extract.txt
+      - name: Confere Python
+        run: |
+          ruff check etl tests
+          ruff format --check etl tests
+          python -m unittest discover -s tests -v
+      - name: Valida dados e gera relatório sem coleta
+        run: |
+          python -m etl.validate
+          python -m etl.analytics
+      - name: Instala e valida frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run lint
+          npm test
+          npm run build
+      - name: Testa navegação em desktop e celular
+        working-directory: frontend
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidencias
+          path: |
+            .cache/quality.json
+            .cache/quality.md
+            reports/
+            frontend/test-results/
+          include-hidden-files: true
+          retention-days: 7
