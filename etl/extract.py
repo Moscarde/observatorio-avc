@@ -71,7 +71,6 @@ def read_origin_dbc(year, month, cache, refresh=False):
 
 def hospital_reference(cache, download=False):
     """Nomes oficiais da tabela auxiliar CNES/RJ; sem inferência por código."""
-    from pysus.data.dbf_reader import read_dbf_fast
     from etl.transform import clean, code
 
     archive = cache / "TAB_SIH.zip"
@@ -100,6 +99,8 @@ def hospital_reference(cache, download=False):
             text=True,
         )
         temporary.replace(archive)
+    from pysus.data.dbf_reader import read_dbf_fast
+
     table = cache / "TCNESRJ.dbf"
     member = "DBF/TCNESRJ.dbf"
     with zipfile.ZipFile(archive) as zipped:
@@ -125,8 +126,11 @@ def hospital_reference(cache, download=False):
     }
 
 
-def _extract(year, month, cache, source="catalog", refresh=False):
-    cache.mkdir(parents=True, exist_ok=True)
+def _extract(year, month, cache, source="catalog", refresh=False, offline=False):
+    if offline and refresh:
+        raise ValueError("--offline é incompatível com --refresh")
+    if not offline:
+        cache.mkdir(parents=True, exist_ok=True)
     path = cache / f"RDRJ{year % 100:02}{month:02}.parquet"
     provenance = path.with_suffix(".json")
     if path.exists() and provenance.exists() and not refresh:
@@ -135,6 +139,10 @@ def _extract(year, month, cache, source="catalog", refresh=False):
         raw_matches = not raw.exists() or info.get("raw_sha256") == digest(raw)
         if info["sha256"] == digest(path) and info["source"] == source and raw_matches:
             return pd.read_parquet(path), info
+    if offline:
+        raise FileNotFoundError(
+            f"Cache ausente, inválido ou de outra fonte: {path.name}; modo offline não acessa a rede"
+        )
     os.environ.setdefault("PYSUS_CACHEPATH", str(cache.resolve() / "pysus"))
     import pysus
 
@@ -172,7 +180,9 @@ def _extract(year, month, cache, source="catalog", refresh=False):
     raise RuntimeError(f"Falha em {year}-{month:02}: {error}") from error
 
 
-def extract(year, month, cache, source="catalog", refresh=False):
+def extract(year, month, cache, source="catalog", refresh=False, offline=False):
+    if offline:
+        return _extract(year, month, cache, source, refresh, offline=True)
     # Contém falhas nativas DBC e limita a espera por competência.
     result = subprocess.run(
         [
@@ -195,7 +205,7 @@ def extract(year, month, cache, source="catalog", refresh=False):
     return _extract(year, month, cache, source, False)
 
 
-def geography(cache):
+def geography(cache, offline=False):
     bundled = Path(__file__).resolve().parents[1] / "assets/municipalities.geojson"
     if bundled.exists():
         geo = json.loads(bundled.read_text())
@@ -207,6 +217,8 @@ def geography(cache):
     paths = [cache / "municipalities.geojson", cache / "municipalities.json"]
     for path, url in zip(paths, [GEO_URL, NAMES_URL]):
         if not path.exists():
+            if offline:
+                raise FileNotFoundError(f"Referência geográfica ausente: {path.name}")
             with urlopen(url, timeout=45) as response:
                 content = response.read()
             parsed = json.loads(content)

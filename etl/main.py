@@ -18,7 +18,7 @@ from etl.transform import DIMS, MEASURES, transform
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description="SIH-RD RJ: competências de 2020 a 2025")
     parser.add_argument("--start-year", type=int, default=2020)
     parser.add_argument("--end-year", type=int, default=2025)
@@ -46,7 +46,14 @@ def main():
         type=Path,
         help="JSON opcional {CNES: nome} obtido de fonte CNES confiável",
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="Usa apenas cache e referências locais; nunca acessa a rede",
+    )
+    args = parser.parse_args(argv)
+    if args.offline and args.refresh:
+        parser.error("--offline é incompatível com --refresh")
     if not 2020 <= args.start_year <= args.end_year <= 2025 or not all(
         1 <= month <= 12 for month in args.months
     ):
@@ -58,7 +65,9 @@ def main():
         for month in sorted(set(args.months)):
             period = f"{year}-{month:02}"
             try:
-                frame, info = extract(year, month, args.cache / "raw", args.source, args.refresh)
+                frame, info = extract(
+                    year, month, args.cache / "raw", args.source, args.refresh, offline=args.offline
+                )
                 cube, audit = transform(frame, year, month)
                 parts.append(cube)
                 coverage.append(period)
@@ -73,7 +82,7 @@ def main():
         else:
             cubes[year] = pd.DataFrame(columns=DIMS + MEASURES)
     try:
-        geo, names = geography(args.cache / "geo")
+        geo, names = geography(args.cache / "geo", offline=args.offline)
     except Exception as exc:
         logging.error("Malha IBGE: %s", exc)
         geo, names = None, {}
@@ -89,7 +98,7 @@ def main():
     else:
         try:
             hospital_names, hospital_source = hospital_reference(
-                args.cache / "raw", download=args.source == "origin-curl"
+                args.cache / "raw", download=args.source == "origin-curl" and not args.offline
             )
         except Exception as exc:
             logging.warning("Nomes hospitalares indisponíveis: %s", exc)
