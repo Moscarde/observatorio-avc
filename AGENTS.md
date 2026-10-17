@@ -22,4 +22,13 @@ Preserve distinct residence and hospitalization municipalities. Keep I62 identif
 
 ## Commits and PRs
 
-Use concise imperative subjects. Keep changes focused; describe purpose and validation, identify checks that could not run, and include screenshots when browser access permits them. The initial environment has no usable Git repository and its `.git/` directory is read-only.
+Use concise imperative subjects. Keep changes focused; describe purpose and validation, identify checks that could not run, and include screenshots when browser access permits them.
+
+## Personal portfolio scope
+
+- Work only in `/media/moscarde/Core/codes/observatorio-avc/`; `../rc-avc/` is a read-only reference.
+- Prioritize Python and SQL, local execution, and no required paid services.
+- Reuse the existing ETL and published aggregates. Do not download source data again as part of this migration. Missing local raw data must be reported explicitly.
+- Use incremental, focused commits with gitmoji and imperative Portuguese subjects, for example `📝 Documenta o modelo de dados`.
+- Never add Codex or Claude as a commit co-author. Preserve existing third-party attribution and license notices.
+- Distinguish implemented features, inherited evidence, and planned work. Never claim that an extraction or a test ran without execution evidence.
