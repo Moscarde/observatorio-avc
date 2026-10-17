@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 @font-face {
   font-family: "IBM Plex Sans";
   src: url("/fonts/plex-sans-400.woff2") format("woff2");

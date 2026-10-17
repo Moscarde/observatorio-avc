@@ -69,7 +69,9 @@ export interface GeoJSON {
   features: {
     type: "Feature";
     properties: { name: string; label: string; ibge: string };
-    geometry: { type: string; coordinates: unknown };
+    geometry:
+      | { type: "Polygon"; coordinates: number[][][] }
+      | { type: "MultiPolygon"; coordinates: number[][][][] };
   }[];
 }
 export interface Filters {

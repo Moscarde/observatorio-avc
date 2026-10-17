@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import * as echarts from "echarts";
+import * as echarts from "../lib/charts";
 export function Chart({
   option,
   label,

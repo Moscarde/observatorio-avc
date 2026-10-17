@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const echarts=require('../vendor/echarts/echarts.cjs');
+const echarts=require('echarts');
 const data=path.join(__dirname,'../public/data');
 const manifest=JSON.parse(fs.readFileSync(path.join(data,'manifest.json')));
 const geo=JSON.parse(fs.readFileSync(path.join(data,manifest.geography)));

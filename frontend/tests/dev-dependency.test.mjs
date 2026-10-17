@@ -6,10 +6,11 @@ import { resolveConfig, optimizeDeps } from "vite";
 const config = await resolveConfig({ logLevel: "error" }, "serve");
 const dependencies = await optimizeDeps(config, true);
 const optimized = dependencies.optimized.echarts;
-assert.ok(optimized, "ECharts local precisa participar da conversão para ESM");
+assert.ok(optimized, "ECharts precisa participar da conversão para ESM");
 const module = await import(pathToFileURL(optimized.file).href);
-assert.equal(typeof module.default.init, "function");
-assert.equal(typeof module.default.registerMap, "function");
+const echarts = module.default ?? module;
+assert.equal(typeof echarts.init, "function");
+assert.equal(typeof echarts.registerMap, "function");
 console.log(
   "ECharts no modo dev: módulo ESM carregado com init e registerMap.",
 );

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import * as echarts from "echarts";
+import * as echarts from "../lib/charts";
 import { Chart, Empty } from "./Chart";
 import { StepHead, Tip } from "./Guide";
 import { format, group } from "../lib/analytics";
