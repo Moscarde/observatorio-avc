@@ -2,8 +2,6 @@
 
 Pipeline de dados públicos com Python e SQL, painel interativo e relatório reproduzível sobre internações por AVC no Rio de Janeiro.
 
-Desenvolvido por [Moscarde](https://github.com/moscarde).
-
 **Versão online:** [avc.riocode.com.br](https://avc.riocode.com.br/).
 
 ![Painel de internações por AVC no Rio de Janeiro](docs/images/painel-desktop.png)
