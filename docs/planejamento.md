@@ -10,7 +10,7 @@ Portar a base de `riocode7/rc-avc` para um projeto pessoal com destino previsto 
 - Reutilização: autorizada pelo autor, sócio da RioCode, incluindo código e elementos visuais.
 - Diretório de trabalho: `../observatorio-avc/`; o diretório de referência não recebe alterações.
 - Dados: reaproveitar os existentes, sem nova coleta nesta migração.
-- Histórico: commits incrementais, gitmoji e mensagens imperativas em português; sem Codex ou Claude como coautores.
+- Histórico: commits incrementais no padrão Conventional Commits + gitmoji, com tipo em inglês e descrição imperativa em português (`tipo(escopo opcional): gitmoji descrição`); sem Codex ou Claude como coautores.
 - Demonstração existente: <https://avc.riocode.com.br/>. Não pressupor que o deploy acompanha os commits pessoais.
 
 Este documento é um plano de execução. Uma entrega planejada só passa a concluída quando seus critérios de aceite forem verificados.
@@ -116,7 +116,7 @@ Entregas: comando Python de validação dos artefatos, contrato versionado e rel
 
 Aceite: verificar cobertura, referências do manifest, hashes, dimensões, medidas finitas/não negativas, denominadores e reconciliação entre cubos e auditorias. Arquivo ausente ou inválido deve causar erro claro. O comando deve funcionar com rede indisponível, sem modificar os agregados originais.
 
-Exemplo de commit: `✅ Valida os agregados publicados sem acesso à rede`.
+Exemplo de commit: `test: ✅ Valida os agregados publicados sem acesso à rede`.
 
 ### M2 — Execução reproduzível e CI
 
@@ -126,7 +126,7 @@ Entregas: dependências Python controladas e separação das dependências neces
 
 Aceite: instalar a partir de ambiente limpo, executar os checks documentados e registrar versões. A instalação de dependências pode usar rede; a validação dos dados não pode depender do DATASUS. Só exibir badges depois de existirem execuções reais correspondentes.
 
-Exemplo de commit: `👷 Automatiza os testes e a construção do painel`.
+Exemplo de commit: `ci: 👷 Automatiza os testes e a construção do painel`.
 
 ### M3 — Manipulação e modelos SQL
 
@@ -136,7 +136,7 @@ Entregas: conversão dos cubos para Parquet ignorado pelo Git, consultas SQL sep
 
 Aceite: reconciliar totais e indicadores com a base atual, incluindo recortes combinados, valores ausentes e residência versus internação. A mesma entrada deve produzir o mesmo conteúdo analítico; metadados de execução podem variar. Não chamar essa camada agregada de base de microdados.
 
-Exemplo de commit: `✨ Modela os indicadores em SQL com DuckDB`.
+Exemplo de commit: `feat: ✨ Modela os indicadores em SQL com DuckDB`.
 
 ### M4 — Relatório e entrega ao consumidor
 
@@ -146,7 +146,7 @@ Entregas: relatório HTML estático gerado por Python/SQL e documentação do co
 
 Aceite: apresentar período, fonte, cobertura, indicadores e limitações; reconciliar seus números com o painel para o mesmo recorte. O relatório deve ser regenerável por comando. Usar imagens e métricas medidas em execução real.
 
-Exemplo de commit: `📊 Gera o relatório a partir dos modelos SQL`.
+Exemplo de commit: `feat: ✨ Gera o relatório a partir dos modelos SQL`.
 
 ### M5 — Operação local e reprocessamento
 
@@ -156,7 +156,7 @@ Entregas: modo offline explícito no ETL, identificação da execução, registr
 
 Aceite: cache ausente ou inválido não inicia download em modo offline; falhas preservam a publicação válida; repetir uma entrada não duplica dados; uma revisão local de competência tem tratamento documentado. Testar falhas com fixtures sintéticas restritas aos testes.
 
-Exemplo de commit: `✨ Permite reprocessar o cache sem acessar a rede`.
+Exemplo de commit: `feat: ✨ Permite reprocessar o cache sem acessar a rede`.
 
 ### M6 — Preparação para publicação open source
 
@@ -168,7 +168,7 @@ Aceite: README distingue o implementado do planejado; execução rápida funcion
 
 O repositório remoto ainda não foi criado. Escolha da licença e publicação são próximas decisões; não há cronograma ou custo contratado.
 
-Exemplo de commit: `📝 Prepara a documentação da primeira versão pública`.
+Exemplo de commit: `docs: 📝 Prepara a documentação da primeira versão pública`.
 
 ## Evidências e apresentação do portfólio
 

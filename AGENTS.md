@@ -29,6 +29,6 @@ Use concise imperative subjects. Keep changes focused; describe purpose and vali
 - Work only in `/media/moscarde/Core/codes/observatorio-avc/`; `../rc-avc/` is a read-only reference.
 - Prioritize Python and SQL, local execution, and no required paid services.
 - Reuse the existing ETL and published aggregates. Do not download source data again as part of this migration. Missing local raw data must be reported explicitly.
-- Use incremental, focused commits with gitmoji and imperative Portuguese subjects, for example `📝 Documenta o modelo de dados`.
+- Use incremental, focused Conventional Commits with gitmoji and imperative Portuguese descriptions: `type(scope optional): gitmoji descrição`. Keep types in English (`feat`, `fix`, `docs`, `chore`, `test`, `ci`, `refactor`, `perf`, `build`, `style`), for example `docs: 📝 Documenta o modelo de dados` or `feat(etl): ✨ Adiciona validação offline`.
 - Never add Codex or Claude as a commit co-author. Preserve existing third-party attribution and license notices.
 - Distinguish implemented features, inherited evidence, and planned work. Never claim that an extraction or a test ran without execution evidence.
