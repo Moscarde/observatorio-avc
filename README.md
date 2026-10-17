@@ -1,20 +1,47 @@
 # Observatório de AVC
 
-Pipeline de dados públicos e painel sobre internações por AVC no Rio de Janeiro. Projeto de portfólio com foco em coleta, tratamento, qualidade de dados e comunicação de indicadores.
+Pipeline de dados públicos com Python e SQL, painel interativo e relatório reproduzível sobre internações por AVC no Rio de Janeiro.
 
-**Versão online:** [avc.riocode.com.br](https://avc.riocode.com.br/).
+**Demonstração da versão de origem:** [avc.riocode.com.br](https://avc.riocode.com.br/). Desenvolvido inicialmente na RioCode e evoluído com autorização como projeto pessoal de Moscarde. O deploy existente é mantido separadamente.
 
-Desenvolvido inicialmente na RioCode e portado com autorização para uma versão pessoal. A evolução planejada prioriza Python e SQL, execução local e ausência de serviços pagos obrigatórios.
+![Painel de internações por AVC no Rio de Janeiro](docs/images/painel-desktop.png)
 
-## Estado atual
+## Da fonte ao produto
 
-O ETL em Python extrai arquivos SIH-RD do DATASUS, valida os registros e gera agregados consumidos por um painel React/TypeScript. O manifest herdado registra 72 competências, de janeiro de 2020 a dezembro de 2025: **112.150 internações** e **23.200 óbitos hospitalares**. Esses dados foram reaproveitados; a migração não realizou nova coleta.
+```text
+DATASUS → ETL Python → agregados e proveniência → painel React
+                               ↓
+                  validação offline → Parquet → DuckDB/SQL → relatório HTML
+```
 
-O código já inclui cache Parquet, proveniência com hashes, testes e medidas aditivas para recalcular taxas e médias sob filtros. A camada SQL e a automação em CI estão no [planejamento](docs/planejamento.md); ainda não estão implementadas.
+O projeto demonstra seleção e tratamento de registros SIH-RD, deduplicação, contratos, hashes, auditorias, modelagem SQL, filtros consistentes e recuperação de publicações. A análise roda localmente, sem serviços pagos ou banco permanente.
+
+Os dados existentes cobrem **72 competências de 2020–2025**, com **112.150 internações** e **23.200 óbitos hospitalares**. Nesta evolução, os agregados foram reutilizados e reconciliados; não houve nova coleta. Os brutos da extração histórica não estão nesta cópia.
+
+## Gerar a análise
+
+Requisitos: Python 3.12+. A instalação das dependências requer rede; os comandos analíticos usam os dados já incluídos.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --require-hashes -r requirements-dev.txt
+python -m etl.validate
+python -m etl.analytics
+```
+
+Abra `reports/index.html`. O relatório é um arquivo independente, com CSS, gráfico SVG e tabelas incorporados. Cada execução preserva Parquets, banco DuckDB, resultados SQL, reconciliação e hashes em `reports/runs/<id>/`.
+
+```bash
+# Recorte aplicado a todos os indicadores e tabelas
+python -m etl.analytics --sex Feminino --cid I63 --residence 330455 --start-period 2024-01
+```
+
+Veja a [análise territorial no painel](docs/images/painel-analise.png), o [relatório em desktop](docs/images/relatorio-desktop.png) e [celular](docs/images/relatorio-mobile.png).
 
 ## Executar o painel
 
-Requisito: Node.js 22.18+ e acesso à rede para instalar dependências.
+Requisito: Node.js 22.18+ (`.nvmrc`: Node 22).
 
 ```bash
 cd frontend
@@ -22,51 +49,37 @@ npm ci
 npm run dev
 ```
 
-Abra `http://127.0.0.1:5180`. Os agregados já estão em `frontend/public/data/`; executar o painel não exige Python, banco de dados ou nova coleta.
+Abra `http://127.0.0.1:5180`. Para produção, `npm run build` gera `frontend/dist/`. O painel consome os agregados versionados, sem API ou Python em produção.
 
-## Validar o código
-
-Python 3.12+:
+## Qualidade e reprodução
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
 python -m unittest discover -s tests -v
 ruff check etl tests
 ruff format --check etl tests
-```
-
-Na pasta `frontend/`:
-
-```bash
+cd frontend
 npm run lint
 npm test
 npm run build
 ```
 
-Teste opcional de navegador: `npx playwright install chromium` e `npm run test:e2e`. A instalação de dependências e do navegador requer rede. A documentação lista os comandos, sem afirmar que foram executados nesta migração.
+`npm test` precisa do ambiente Python acima e reconcilia SQL e TypeScript em três recortes reais. Os dois testes específicos de PySUS são ignorados se o extra não estiver instalado; para executá-los, use `requirements-extract.txt` em vez de `requirements-dev.txt`.
 
-## Organização
+Testes de navegador: `npx playwright install chromium` e `npm run test:e2e`. O workflow em `.github/workflows/ci.yml` repete os checks sem coletar dados. Confira as [evidências locais e limites](docs/validacao.md); não há execução remota de CI declarada.
 
-| Diretório | Responsabilidade |
-|---|---|
-| `etl/` | Extração, transformação, exportação e CLI |
-| `tests/` | Testes Python com fixtures sintéticas |
-| `frontend/src/` | Painel, filtros e cálculos dos indicadores |
-| `frontend/tests/` | Testes de cálculos, mapa e navegador |
-| `frontend/public/data/` | Agregados públicos e manifest de proveniência |
-| `assets/` | Referência geográfica |
-| `docs/` | Planejamento, metodologia e operação |
+## Documentação
 
-## Dados e interpretação
+- [Arquitetura e decisões](docs/arquitetura.md)
+- [Modelo, grão e indicadores](docs/modelo-de-dados.md)
+- [Metodologia, fontes e limites](docs/metodologia.md)
+- [Execução offline e recuperação](docs/operacao.md)
+- [Entregas e próximos passos](docs/planejamento.md)
+- [Contribuição](CONTRIBUTING.md) e [histórico](CHANGELOG.md)
 
-Fonte: SIH/SUS — DATASUS, arquivos RJ, por competência de processamento. O recorte inclui AIHs normais (`IDENT=1`) e diagnóstico principal I60–I64, mantendo I62 identificável; exclui G45, I69 e prorrogações.
+`etl/` contém a implementação Python; `contracts/`, o contrato público; `sql/`, os modelos analíticos; `templates/`, o relatório; `frontend/`, o painel. Dados intermediários e relatórios gerados ficam fora do Git.
 
-AIHs são registros de internação, não pacientes únicos. A mortalidade é hospitalar; valores de AIH não representam custo econômico integral. Residência e internação são dimensões distintas. Nenhum identificador de AIH é publicado nos agregados.
+## Interpretação e licença
 
-Consulte [metodologia, fontes e limites](docs/metodologia.md), [operação do ETL e publicação](docs/operacao.md) e o [plano de evolução](docs/planejamento.md).
+Fonte: SIH/SUS — DATASUS, arquivos RJ, por competência de processamento. Inclui AIHs normais (`IDENT=1`), diagnóstico principal I60–I64 e I62 identificável; exclui G45, I69 e prorrogações. AIHs não são pacientes únicos. Mortalidade é hospitalar; valores de AIH não representam custo econômico integral. Residência e internação são dimensões distintas.
 
-## Licenciamento
-
-A licença do código próprio será definida antes da publicação open source. As licenças e atribuições de terceiros devem ser preservadas: Apache ECharts em `frontend/vendor/echarts/`, IBM Plex em `frontend/public/fonts/OFL.txt` e demais ativos descritos na metodologia. A futura licença do código não substitui as condições de reutilização das fontes e dos ativos.
+Código próprio sob [MIT](LICENSE). Fontes de dados e ativos mantêm suas condições e atribuições, descritas em [créditos de terceiros](THIRD_PARTY_NOTICES.md).

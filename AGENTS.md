@@ -2,13 +2,13 @@
 
 ## Structure
 
-`etl/`: Python SIH-RD extraction, transformation, export and CLI. `tests/`: Python unit tests. `frontend/src/`: React components, hooks, analytics and types. `frontend/tests/`: calculation and browser tests. `assets/`: public geographic reference. `frontend/public/data/`: generated static aggregates only. `frontend/vendor/echarts/`: official Apache ECharts bundle with license and NOTICE.
+`etl/`: Python SIH-RD extraction, transformation, export and CLI. `tests/`: Python unit tests. `frontend/src/`: React components, hooks, analytics and types. `frontend/tests/`: calculation and browser tests. `assets/`: public geographic reference. `frontend/public/data/`: generated static aggregates only. `sql/`: DuckDB analytical models. `contracts/`: versioned public data contracts. `templates/`: portable HTML report template. `docs/`: architecture, methodology, operation and evidence.
 
 Do not place application code in `.agents/`, `.codex/`, `.aws/` or `.git/`. Raw downloads belong in ignored `.cache/`. Keep README concise and accurate about data coverage and validation.
 
 ## Commands
 
-Python 3.12+: `python3 -m venv .venv`, activate, `pip install -r requirements.txt`. Extract: `python etl/main.py --start-year 2020 --end-year 2025 --source origin-curl` (curl transport, PySUS reader; optional catalog/origin modes remain available). Tests: `python -m unittest discover -s tests -v`. Lint/format: `ruff check etl tests`, `ruff format --check etl tests`.
+Python 3.12+: `python3 -m venv .venv`, activate, `pip install --require-hashes -r requirements-dev.txt`. Offline validation: `python -m etl.validate`. Analysis/report: `python -m etl.analytics`. Extract from an existing cache only: `python -m etl.main --offline --source origin-curl`. Never collect new source data during this migration. Tests: `python -m unittest discover -s tests -v`. Lint/format: `ruff check etl tests`, `ruff format --check etl tests`.
 
 Node 22.18+, from `frontend/`: `npm ci`, `npm run dev`, `npm run build`, `npm run preview`, `npm run lint`, `npm test`. Optional browser checks: `npx playwright install chromium`, `npm run test:e2e`.
 
@@ -32,3 +32,6 @@ Use concise imperative subjects. Keep changes focused; describe purpose and vali
 - Use incremental, focused Conventional Commits with gitmoji and imperative Portuguese descriptions: `type(scope optional): gitmoji descrição`. Keep types in English (`feat`, `fix`, `docs`, `chore`, `test`, `ci`, `refactor`, `perf`, `build`, `style`), for example `docs: 📝 Documenta o modelo de dados` or `feat(etl): ✨ Adiciona validação offline`.
 - Never add Codex or Claude as a commit co-author. Preserve existing third-party attribution and license notices.
 - Distinguish implemented features, inherited evidence, and planned work. Never claim that an extraction or a test ran without execution evidence.
+
+- Prefer the official npm ECharts package and its types; register only chart components used by the app. Preserve third-party notices in THIRD_PARTY_NOTICES.md.
+- Generated reports, databases and Parquets belong in ignored reports/ or .cache/, never in the reference directory.
