@@ -1,6 +1,6 @@
 # Créditos e condições de terceiros
 
-O código próprio é disponibilizado sob a [licença MIT](LICENSE). O projeto foi desenvolvido inicialmente na RioCode e reutilizado com autorização para a versão pessoal de Moscarde. A licença do software não altera as condições das fontes de dados ou dos ativos de terceiros.
+O código desenvolvido por Moscarde é disponibilizado sob a [licença MIT](LICENSE). A licença do software não altera as condições das fontes de dados ou dos ativos de terceiros.
 
 | Material | Origem e condições |
 |---|---|

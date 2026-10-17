@@ -25,7 +25,7 @@ python -m etl.analytics --output reports/recorte --sex Feminino --cid I63 --resi
 
 O primeiro comando gera `.cache/quality.json` e `.cache/quality.md`, com exit code 1 em falha. O segundo publica `reports/index.html` e o ponteiro `reports/latest.json`, preservando as execuções anteriores em `reports/runs/<id>/`.
 
-Abra `reports/index.html` diretamente no navegador. O arquivo contém CSS, SVG e tabelas, sem dependências externas de visualização. O endereço da aplicação de origem não é atualizado por estes comandos.
+Abra `reports/index.html` diretamente no navegador. O arquivo contém CSS, SVG e tabelas, sem dependências externas de visualização. A geração local de relatórios não atualiza o painel online.
 
 Filtros disponíveis: `--sex`, `--age`, `--cid`, `--residence`, `--hospital-city`, `--hospital`, `--start-period` e `--end-period`. `--cid` seleciona a categoria de três caracteres, incluindo subcategorias. Todos os marts usam a mesma coorte.
 
@@ -63,7 +63,7 @@ python -m etl.main --offline --source origin-curl --start-year 2020 --end-year 2
 
 Falta de cache válido causa erro sem download. `--offline` não combina com `--refresh`. A fonte informada precisa corresponder à proveniência do cache. Execuções, cobertura e falhas são registradas em `<cache>/runs/`.
 
-A rotina herdada sem `--offline` pode acessar o DATASUS e não deve ser executada como parte desta migração. `--allow-partial` autoriza explicitamente publicar lacunas e pode substituir a publicação anterior por dados parciais; não faz parte do fluxo padrão.
+A rotina de extração sem `--offline` pode acessar o DATASUS; use `--offline` para reprocessar apenas o cache local. `--allow-partial` autoriza explicitamente publicar lacunas e pode substituir a publicação anterior por dados parciais; não faz parte do fluxo padrão.
 
 ## Painel e checks
 
@@ -87,4 +87,4 @@ npm run test:e2e
 
 O painel é construído com `cd frontend && npm ci && npm run build`; o conteúdo de `frontend/dist/` pode ser hospedado estaticamente. `npm run preview` é uma prévia local, não um serviço de produção.
 
-O relatório é um HTML independente. A versão online existente é <https://avc.riocode.com.br/>, mantida separadamente. Nenhum repositório remoto, hospedagem paga ou deploy automático é exigido para executar esta versão pessoal.
+O relatório é um HTML independente. A versão online está disponível em <https://avc.riocode.com.br/>. Nenhum repositório remoto, hospedagem paga ou deploy automático é exigido para executar esta versão pessoal.

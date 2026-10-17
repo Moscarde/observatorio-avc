@@ -35,3 +35,5 @@ Use concise imperative subjects. Keep changes focused; describe purpose and vali
 
 - Prefer the official npm ECharts package and its types; register only chart components used by the app. Preserve third-party notices in THIRD_PARTY_NOTICES.md.
 - Generated reports, databases and Parquets belong in ignored reports/ or .cache/, never in the reference directory.
+
+- Credit Moscarde as the project author. Do not frame the project as transferred, ported or authorized by a company; retain the online demo URL and genuine third-party asset/source credits.

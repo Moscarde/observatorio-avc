@@ -2,7 +2,7 @@
 
 ## 0.1.0 — 2026-10-17
 
-- Porta a base autorizada da RioCode para o projeto pessoal, preservando os agregados existentes.
+- Disponibiliza o pipeline e o painel de internações por AVC, preservando os agregados existentes.
 - Adiciona contrato versionado e validação offline de hashes, cobertura, grão, medidas e auditorias.
 - Implementa seis modelos analíticos SQL, persistência Parquet e banco DuckDB local.
 - Gera relatório HTML portátil, filtrável na execução, com reconciliação SQL/Python/TypeScript.

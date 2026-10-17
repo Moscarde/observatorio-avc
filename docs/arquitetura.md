@@ -3,7 +3,7 @@
 ## Caminho implementado com os dados disponíveis
 
 ```text
-frontend/public/data/ — cubos JSON, manifest e geografia herdados
+frontend/public/data/ — cubos JSON, manifest e geografia
               ↓ etl.validate (biblioteca padrão; sem rede)
 contrato v1 + hashes + auditorias + cobertura
               ↓ etl.analytics
@@ -18,7 +18,7 @@ O painel React continua lendo os JSONs publicados. Seu cálculo TypeScript é re
 
 Cada execução analítica registra os hashes das entradas e da implementação, commit, alterações locais, versões de DuckDB/Pandas/PyArrow, filtros, duração e hashes das saídas. Relatórios e bancos ficam ignorados pelo Git. A página HTML incorpora CSS e SVG, sem CDN, JavaScript ou arquivos laterais necessários à leitura.
 
-## Caminho de extração herdado
+## Caminho de extração
 
 `etl.extract` obtém DBCs oficiais, converte para DataFrame e mantém cache Parquet com proveniência. `etl.transform` seleciona e trata os registros, audita problemas e agrega as dimensões. `etl.export` publica cubos com nome derivado de hash e substitui o manifest por último.
 

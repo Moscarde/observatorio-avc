@@ -29,7 +29,7 @@ A chave formada por todas as dimensões deve ser única. Códigos desconhecidos 
 | `cents` / `value_n` | inteiro / inteiro | Soma em centavos / registros com valor válido |
 | `age_sum` / `age_n` | numérico / inteiro | Soma de idades convertidas em anos / idades válidas |
 
-Cada denominador está entre zero e `n`; `deaths <= death_n`. Soma com denominador zero deve ser zero. As ausências declaradas na auditoria precisam reconciliar com `n - denominador`. O número de internações por competência reconcilia com selecionados menos duplicatas da auditoria herdada.
+Cada denominador está entre zero e `n`; `deaths <= death_n`. Soma com denominador zero deve ser zero. As ausências declaradas na auditoria precisam reconciliar com `n - denominador`. O número de internações por competência reconcilia com selecionados menos duplicatas da auditoria registrada.
 
 ## Indicadores derivados
 
@@ -59,6 +59,6 @@ As bases territoriais e os eixos de perfil são visões alternativas da mesma po
 
 ## Evidência e limitações
 
-A proveniência herdada identifica arquivos oficiais e seus hashes, mas eles não estão disponíveis localmente. A reconciliação atual comprova consistência entre agregados, auditorias herdadas, SQL e cálculos TypeScript; não substitui revalidação independente dos brutos.
+A proveniência registrada identifica arquivos oficiais e seus hashes, mas eles não estão disponíveis localmente. A reconciliação atual comprova consistência entre agregados, auditorias registradas, SQL e cálculos TypeScript; não substitui revalidação independente dos brutos.
 
 Os testes de seleção do ETL usam fixtures sintéticas exclusivamente em `tests/`. Não há incidência populacional, mortalidade populacional, ajuste de gravidade, identificação de pacientes únicos ou estimativa de custo econômico integral.

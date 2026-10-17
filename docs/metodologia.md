@@ -1,6 +1,6 @@
 # Metodologia, fontes e limites
 
-Documento herdado da versão de referência. As informações sobre a coleta descrevem a extração registrada no manifest; não representam uma nova coleta ou validação nesta migração.
+As informações sobre a coleta descrevem a extração registrada no manifest. A validação dos agregados não substitui a revalidação dos arquivos brutos.
 
 
 - [SIH/SUS — DATASUS](https://datasus.saude.gov.br/acesso-a-informacao/producao-hospitalar-sih-sus/) e [notas técnicas](https://tabnet.datasus.gov.br/cgi/sih/midescr.htm).

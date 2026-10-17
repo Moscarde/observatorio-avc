@@ -253,7 +253,7 @@ def validate_dataset(directory, *, allow_partial=False):
         "totals": {m: math.fsum(r[m] for r in rows) for m in MEASURES},
         "source_rows_declared": sum(a["source_rows"] for a in audits.values()),
         "files_sha256": {"manifest.json": digest(root / "manifest.json"), **hashes},
-        "evidence": "Agregados reconciliados com auditorias herdadas; brutos não revalidados.",
+        "evidence": "Agregados reconciliados com auditorias registradas no manifest; brutos não revalidados.",
         "checks": [
             "schema",
             "coverage",

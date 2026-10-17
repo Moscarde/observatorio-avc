@@ -19,11 +19,11 @@ Verificações executadas em **17/10/2026**, em Linux, com Python 3.12.3 e Node.
 ## Base de dados examinada
 
 - Período: janeiro de 2020 a dezembro de 2025, competências de processamento.
-- Cobertura: 72 competências, sem falhas declaradas no manifest herdado.
+- Cobertura: 72 competências, sem falhas declaradas no manifest.
 - Linhas agregadas: 66.635.
 - Internações: 112.150.
 - Óbitos hospitalares: 23.200.
-- Registros examinados na extração original, segundo as auditorias herdadas: 4.950.224.
+- Registros examinados na extração original, segundo as auditorias registradas: 4.950.224.
 - Idades excluídas da média por ausência ou implausibilidade, segundo a auditoria: 7.
 
 Contagens de seleção e ausências foram reconciliadas com as auditorias do manifest. Os totais não representam pacientes únicos. A validade histórica dos arquivos oficiais brutos não foi reavaliada porque eles não estão disponíveis nesta cópia.
@@ -55,4 +55,4 @@ Capturas feitas com os agregados existentes, sem fixtures sintéticas. Os arquiv
 
 A instalação de dependências e do navegador usa rede, mas não baixa dados de internações. Testes de PySUS usam mocks ou fixtures e não comprovam a disponibilidade atual do FTP. O modo offline não foi executado sobre os 72 arquivos brutos históricos, ausentes localmente.
 
-O código do CI está versionado, mas sua aprovação remota depende do repositório GitHub. Não houve publicação remota ou alteração do deploy da RioCode. Durações e hashes específicos de cada execução analítica ficam em seu `run.json`; não são tratados como benchmark de desempenho.
+O código do CI está versionado, mas sua aprovação remota depende do repositório GitHub. Não houve publicação remota ou alteração do deploy online. Durações e hashes específicos de cada execução analítica ficam em seu `run.json`; não são tratados como benchmark de desempenho.
