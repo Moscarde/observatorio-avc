@@ -114,6 +114,7 @@ def render_report(manifest, marts, run, reconciliation):
         ],
         "Mesma coorte dos indicadores gerais. * Ano com menos de 12 competências cobertas no recorte. Permanência em dias.",
     )
+    annual_table = annual_table.replace("<table>", '<table class="annual-table">', 1)
     hospitals = table(
         ["Estabelecimento / CNES", "Internações", "Óbitos"],
         [

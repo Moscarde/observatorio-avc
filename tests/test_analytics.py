@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 import socket
+import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -110,3 +111,17 @@ class AnalyticsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "ID"):
             restore(self.output, "../../invalid")
         self.assertEqual(before, (self.output / "latest.json").read_bytes())
+
+    def test_restore_rejects_corrupted_artifact_and_preserves_pointer(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary)
+            run_id = self.baseline_run.name
+            copy = output / "runs" / run_id
+            shutil.copytree(self.baseline_run, copy)
+            (output / "index.html").write_text("publicação anterior")
+            (output / "latest.json").write_text('{"previous": true}')
+            (copy / "mart_indicadores.parquet").write_bytes(b"artefato corrompido")
+            with self.assertRaisesRegex(ValueError, "Hash divergente"):
+                restore(output, run_id)
+            self.assertEqual((output / "index.html").read_text(), "publicação anterior")
+            self.assertEqual((output / "latest.json").read_text(), '{"previous": true}')
